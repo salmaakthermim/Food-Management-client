@@ -25,7 +25,7 @@ const ManageFoodPage = () => {
 
     const fetchFoods = async () => {
         try {
-            const res = await axios.get("https://users-management-food-server.vercel.app/foods");
+            const res = await axios.get("http://localhost:5000/foods");
             setFoods(res.data);
         } catch (error) {
             console.error("Failed to fetch foods:", error);
@@ -47,7 +47,7 @@ const ManageFoodPage = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`https://users-management-food-server.vercel.app/foods/${id}`);
+                    await axios.delete(`http://localhost:5000/foods/${id}`);
                     setFoods(foods.filter((food) => food._id !== id));
                     Swal.fire({
                         title: "Deleted!",

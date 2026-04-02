@@ -25,8 +25,8 @@ const AddFoodPage = () => {
     location: "",
     date: "",
     priority: "",
-    email: "rimiruma12@.com",
-    name: "Rimi Ruma",
+    email: "salmaakthermim112@gmail.com",
+    name: "Salma Akther Mim",
     image: "",
   });
 
@@ -39,7 +39,7 @@ const AddFoodPage = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://users-management-food-server.vercel.app/foods", {
+      const response = await fetch("http://localhost:5000/foods", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -61,8 +61,8 @@ const AddFoodPage = () => {
           location: "",
           date: "",
           priority: "",
-          email: "example@gmail.com",
-          name: "John Doe",
+          email: "",
+          name: "",
           image: "",
         });
       }

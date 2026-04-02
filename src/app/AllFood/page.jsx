@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Fetch foods from backend with optional sort
 async function fetchFoods(sort = "asc") {
-  const res = await fetch(`https://users-management-food-server.vercel.app/foods?sort=${sort}`, {
+  const res = await fetch(`http://localhost:5000/foods?sort=${sort}`, {
     cache: "no-store",
   });
   if (!res.ok) throw new Error("Failed to fetch foods");
