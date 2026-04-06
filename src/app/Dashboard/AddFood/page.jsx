@@ -1,22 +1,19 @@
 "use client";
 
 import useAuth from "@/hooks/useAuth";
-import { AuthContext } from "@/provider/AuthProvider";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import Swal from "sweetalert2";
 
 const AddFoodPage = () => {
-  const {user} = useAuth(AuthContext);
-  // console.log(user);
-
+  const { user } = useAuth();
   const router = useRouter();
 
-  if(!user){
+  if (!user) {
     router.push("/login");
   }
-  
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -25,8 +22,8 @@ const AddFoodPage = () => {
     location: "",
     date: "",
     priority: "",
-    email: "salmaakthermim112@gmail.com",
-    name: "Salma Akther Mim",
+    email: user?.email || "",
+    name: user?.displayName || "",
     image: "",
   });
 

@@ -36,7 +36,7 @@ export default function CheckoutPage() {
           setSubTotal(total);
           
           if (data.length === 0) {
-            router.push("/cart"); // Can't checkout empty cart
+            router.push("/carts"); // Can't checkout empty cart
           }
         });
     }

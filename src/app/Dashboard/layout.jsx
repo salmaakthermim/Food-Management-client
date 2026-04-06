@@ -79,7 +79,7 @@ export default function DashboardLayout({ children }) {
         </div>
 
         {/* User Card */}
-        <div className="p-6 border-b border-gray-100 flex items-center gap-3">
+        <div className="p-6 border-b  border-gray-600 flex items-center gap-3">
           <img 
             src={user?.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"} 
             alt="Profile" 

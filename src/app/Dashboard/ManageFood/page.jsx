@@ -7,20 +7,16 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import useAuth from "@/hooks/useAuth";
-import { AuthContext } from "@/provider/AuthProvider";
 
 const ManageFoodPage = () => {
     const [foods, setFoods] = useState([]);
     const [filter, setFilter] = useState("all");
-     const {user} = useAuth(AuthContext);
-    //  console.log(user);
-
-
+    const { user } = useAuth();
     const router = useRouter();
 
-  if(!user){
-    router.push("/login");
-  }
+    if (!user) {
+        router.push("/login");
+    }
      
 
     const fetchFoods = async () => {

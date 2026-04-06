@@ -46,6 +46,7 @@ export default function FoodReviews({ foodId }) {
     setIsSubmitting(true);
     const reviewData = {
       foodId,
+      email: user.email,
       customerName: user.displayName || "Anonymous",
       customerPhoto: user.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Reviewer",
       rating,

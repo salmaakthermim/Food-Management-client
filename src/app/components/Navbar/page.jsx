@@ -8,7 +8,7 @@ import { Menu, X, ChevronDown, User, LogOut, LayoutDashboard } from "lucide-reac
 import { useState } from "react";
 
 const NavbarPage = () => {
-  const { user } = useAuth();
+  const { user, dbUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
@@ -72,7 +72,7 @@ const NavbarPage = () => {
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar ring ring-indigo-500 ring-offset-2">
                 <div className="w-10 rounded-full">
-                  <img src={user?.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} alt="User" />
+                  <img src={dbUser?.photo || user?.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} alt="User" />
                 </div>
               </div>
               <ul tabIndex={0} className="menu menu-sm dropdown-content mt-4 z-[1] p-2 shadow-2xl glassCard rounded-box w-60">

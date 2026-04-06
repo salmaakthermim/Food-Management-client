@@ -1,10 +1,56 @@
 "use client";
+import React, { useState } from "react";
 import Link from "next/link";
 import { FaMapMarkerAlt, FaStar, FaClock } from "react-icons/fa";
+import { ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const FoodCardPage = ({ food }) => {
   const { title, description, price, category, location, priority, image, _id } = food || {};
+  const [isAdding, setIsAdding] = useState(false);
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleAddToCart = async () => {
+    if (!user) {
+      toast.error("Please login to add items to cart!");
+      router.push("/login?redirect=/menu");
+      return;
+    }
+
+    setIsAdding(true);
+    const cartItem = {
+      foodId: _id,
+      title: title,
+      price: price,
+      image: image,
+      quantity: 1,
+      email: user.email,
+      timestamp: new Date()
+    };
+
+    try {
+      const res = await fetch(`http://localhost:5000/carts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cartItem)
+      });
+      if (res.ok) {
+        toast.success(`${title} added to cart!`);
+      } else {
+        toast.error("Failed to add to cart");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add to cart");
+    } finally {
+      setIsAdding(false);
+      router.push("/carts");
+    }
+  };
 
   return (
     <motion.div 
@@ -13,7 +59,7 @@ const FoodCardPage = ({ food }) => {
       viewport={{ once: true, margin: "-50px" }}
       whileHover={{ y: -8 }}
       transition={{ duration: 0.4 }}
-      className="glassCard overflow-hidden group flex flex-col h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800"
+      className="glassCard overflow-hidden group flex flex-col h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-indigo-500/10"
     >
       {/* Image Container with Hover Zoom */}
       <div className="relative w-full h-56 overflow-hidden">
@@ -28,23 +74,23 @@ const FoodCardPage = ({ food }) => {
           ${price}
         </div>
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/60 to-transparent"></div>
-        <h2 className="absolute bottom-4 left-4 text-2xl font-black text-white drop-shadow-md">
+        <h2 className="absolute bottom-4 left-4 text-xl font-black text-white drop-shadow-md pr-4 line-clamp-1">
           {title}
         </h2>
       </div>
 
       {/* Content */}
       <div className="p-6 flex flex-col flex-1">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="px-3 py-1 bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider rounded-md">
+        <div className="flex items-center gap-2 mb-3 transform -translate-y-10">
+          <span className="px-3 py-1 bg-white/90 text-indigo-600 shadow-md backdrop-blur-md text-xs font-bold uppercase tracking-wider rounded-md border border-white/20">
             {category || "Special"}
           </span>
-          <span className="px-3 py-1 bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400 text-xs font-bold uppercase tracking-wider rounded-md">
+          <span className="px-3 py-1 bg-white/90 text-rose-600 shadow-md backdrop-blur-md text-xs font-bold uppercase tracking-wider rounded-md border border-white/20">
             {priority || "High"}
           </span>
         </div>
 
-        <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4 flex-1">
+        <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4 flex-1 -mt-4">
           {description}
         </p>
 
@@ -61,12 +107,27 @@ const FoodCardPage = ({ food }) => {
           </div>
         </div>
 
-        <Link
-          href={`/AllFood/${_id}`}
-          className="btn border-none w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-indigo-500/30 transition-all font-bold text-md"
-        >
-          View Details
-        </Link>
+        <div className="flex gap-3 mt-auto">
+          <Link
+            href={`/AllFood/${_id}`}
+            className="flex-1 flex items-center justify-center py-3 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          >
+            Details
+          </Link>
+          <button
+            onClick={handleAddToCart}
+            disabled={isAdding}
+            className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-indigo-500/30 transition-all font-bold text-sm disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isAdding ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              <>
+                <ShoppingCart size={16} /> Add to Cart
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </motion.div>
   );

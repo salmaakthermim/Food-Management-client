@@ -16,7 +16,7 @@ const RegisterPage = () => {
     const [error, setError] = useState("");
     const router = useRouter();
 
-    // Email + Password registration (NO MONGODB SAVE)
+    // Email + Password registration
     const handleRegister = async (e) => {
         e.preventDefault();
         setError("");
@@ -30,11 +30,27 @@ const RegisterPage = () => {
             // Create user in Firebase
             const result = await createUserWithEmailAndPassword(auth, email, password);
 
-            // Update Firebase profile
+            // Update Firebase profile (only displayName, photo stored in MongoDB)
             await updateProfile(result.user, {
                 displayName: name,
-                photoURL: photoURL,
             });
+
+            // Save to MongoDB
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    photo: photoURL,
+                    provider: "email",
+                }),
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.message || "Failed to save user");
+            }
 
             toast.success("Account Created Successfully!");
             e.target.reset();
@@ -60,8 +76,8 @@ const RegisterPage = () => {
                 provider: "google",
             };
 
-            // Save only Google users to MongoDB
-            await fetch("http://localhost:5000/users", {
+            // Save to MongoDB
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newUser),
@@ -76,10 +92,21 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-green-50 px-4">
+        <div
+            className="relative flex justify-center items-center min-h-screen px-4"
+            style={{
+                backgroundImage: "url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=80')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+            }}
+        >
             <ToastContainer />
-            <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-8">
-                <h2 className="text-3xl font-bold text-center text-green-700 mb-6">
+            {/* dark overlay */}
+            <div className="absolute inset-0 bg-black/55" />
+
+            <div className="relative z-10 w-full max-w-md bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl rounded-xl p-8">
+                <h2 className="text-3xl font-bold text-center text-white mb-6">
                     Create Your Account
                 </h2>
 
@@ -87,58 +114,58 @@ const RegisterPage = () => {
 
                     {/* Name */}
                     <div>
-                        <label className="block font-medium mb-1">Full Name</label>
+                        <label className="block font-medium mb-1 text-white">Full Name</label>
                         <input
                             type="text"
                             name="name"
                             required
                             placeholder="Enter your name"
-                            className="input input-bordered w-full"
+                            className="w-full bg-white/20 border border-white/30 text-white placeholder-white/60 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
                         />
                     </div>
 
                     {/* Photo URL */}
                     <div>
-                        <label className="block font-medium mb-1">Photo URL</label>
+                        <label className="block font-medium mb-1 text-white">Photo URL</label>
                         <input
                             type="text"
                             name="photo"
                             placeholder="Enter profile image URL"
-                            className="input input-bordered w-full"
+                            className="w-full bg-white/20 border border-white/30 text-white placeholder-white/60 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
                         />
                     </div>
 
                     {/* Email */}
                     <div>
-                        <label className="block font-medium mb-1">Email Address</label>
+                        <label className="block font-medium mb-1 text-white">Email Address</label>
                         <input
                             type="email"
                             name="email"
                             required
                             placeholder="Enter your email"
-                            className="input input-bordered w-full"
+                            className="w-full bg-white/20 border border-white/30 text-white placeholder-white/60 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
                         />
                     </div>
 
                     {/* Password */}
                     <div>
-                        <label className="block font-medium mb-1">Password</label>
+                        <label className="block font-medium mb-1 text-white">Password</label>
                         <input
                             type="password"
                             name="password"
                             required
                             placeholder="Create a password"
-                            className="input input-bordered w-full"
+                            className="w-full bg-white/20 border border-white/30 text-white placeholder-white/60 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
                         />
                     </div>
 
                     {/* Error */}
                     {error && (
-                        <p className="text-red-600 text-sm text-center">{error}</p>
+                        <p className="text-red-300 text-sm text-center">{error}</p>
                     )}
 
                     {/* Register Button */}
-                    <button className="btn bg-green-600 hover:bg-green-700 text-white w-full">
+                    <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-md transition-colors">
                         Register
                     </button>
                 </form>
@@ -146,7 +173,7 @@ const RegisterPage = () => {
                 {/* Google Signup */}
                 <button
                     onClick={handleGoogleSignup}
-                    className="btn bg-white w-full mt-3 text-black border-[#e5e5e5]"
+                    className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-100 text-black font-medium py-2 rounded-md mt-3 transition-colors"
                 >
                     <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <g>
@@ -160,9 +187,9 @@ const RegisterPage = () => {
                     Continue with Google
                 </button>
 
-                <p className="mt-4 text-center">
+                <p className="mt-4 text-center text-white/80">
                     Already have an account?{" "}
-                    <a href="/login" className="text-green-700 font-semibold underline">
+                    <a href="/login" className="text-green-300 font-semibold underline">
                         Login
                     </a>
                 </p>

@@ -13,15 +13,13 @@ const CartPage = () => {
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login?redirect=/cart");
+    if (loading) return;
+    if (!user) {
+      router.push("/login?redirect=/carts");
       return;
     }
-
-    if (user?.email) {
-      fetchCart();
-    }
-  }, [user, loading, router]);
+    fetchCart();
+  }, [user, loading]);
 
   const fetchCart = () => {
     setIsFetching(true);

@@ -10,6 +10,7 @@ const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null);
+    const [dbUser, setDbUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
 
@@ -30,6 +31,7 @@ const AuthProvider = ({children}) => {
 
     const logOut = () => {
         setLoading(true);
+        setDbUser(null);
         return signOut(auth);
     }
 
@@ -38,17 +40,29 @@ const AuthProvider = ({children}) => {
     }
 
     useEffect(() => {
-        const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
-            setLoading(false);
+            setLoading(false); // set loading false immediately, don't wait for DB
+            if (currentUser?.email) {
+                try {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/by-email/${currentUser.email}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setDbUser(data);
+                    }
+                } catch {
+                    setDbUser(null);
+                }
+            } else {
+                setDbUser(null);
+            }
         })
-        return () => {
-            unSubscribe();
-        }
-    })
+        return () => unSubscribe();
+    }, [])
 
     const authInfo = {
         user,
+        dbUser,
         loading,
         registerUser,
          signInUser,
