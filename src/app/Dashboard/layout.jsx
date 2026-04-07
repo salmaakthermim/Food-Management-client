@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Home, LayoutDashboard, PlusCircle, Settings, 
-  Menu, X, LogOut, Utensils, ListOrdered, Users 
+  Menu, X, LogOut, Utensils, ListOrdered, Users, Bike
 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { signOut } from "firebase/auth";
@@ -29,6 +29,7 @@ export default function DashboardLayout({ children }) {
     { name: "Manage Foods", path: "/Dashboard/ManageFood", icon: Settings },
     { name: "Add Food", path: "/Dashboard/AddFood", icon: PlusCircle },
     { name: "Manage Orders", path: "/Dashboard/ManageOrders", icon: ListOrdered },
+    { name: "Delivery", path: "/Dashboard/Delivery", icon: Bike },
     { name: "Users", path: "/Dashboard/Users", icon: Users },
   ];
 
@@ -36,6 +37,7 @@ export default function DashboardLayout({ children }) {
     { name: "My Orders", path: "/Dashboard/MyOrders", icon: LayoutDashboard },
     { name: "Wishlist", path: "/Dashboard/Wishlist", icon: PlusCircle },
     { name: "Reviews", path: "/Dashboard/Reviews", icon: Settings },
+    { name: "Delivery", path: "/Dashboard/Delivery", icon: Bike },
   ];
 
   const navItems = role === "admin" ? adminNavLinks : customerNavLinks;
@@ -81,7 +83,7 @@ export default function DashboardLayout({ children }) {
         {/* User Card */}
         <div className="p-6 border-b  border-gray-600 flex items-center gap-3">
           <img 
-            src={user?.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"} 
+            src={user?.photoURL || "https://img.freepik.com/free-photo/young-beautiful-girl-posing-black-leather-jacket-park_1153-8104.jpg?semt=ais_incoming&w=740&q=80"} 
             alt="Profile" 
             className="w-12 h-12 rounded-full border-2 border-indigo-100 p-0.5"
           />

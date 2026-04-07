@@ -3,12 +3,14 @@ import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase.config";
 import useAuth from "@/hooks/useAuth";
+import useRole from "@/hooks/useRole";
 import { motion } from "framer-motion";
-import { Menu, X, ChevronDown, User, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard, Bike } from "lucide-react";
 import { useState } from "react";
 
 const NavbarPage = () => {
   const { user, dbUser } = useAuth();
+  const [role] = useRole();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
@@ -72,7 +74,7 @@ const NavbarPage = () => {
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar ring ring-indigo-500 ring-offset-2">
                 <div className="w-10 rounded-full">
-                  <img src={dbUser?.photo || user?.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} alt="User" />
+                  <img src={dbUser?.photo || user?.photoURL || "https://img.freepik.com/free-photo/young-beautiful-girl-posing-black-leather-jacket-park_1153-8104.jpg?semt=ais_incoming&w=740&q=80"} alt="User" />
                 </div>
               </div>
               <ul tabIndex={0} className="menu menu-sm dropdown-content mt-4 z-[1] p-2 shadow-2xl glassCard rounded-box w-60">
@@ -83,6 +85,11 @@ const NavbarPage = () => {
                 <li>
                   <Link href="/Dashboard" className="hover:text-indigo-500 py-2"><LayoutDashboard size={16}/> Dashboard</Link>
                 </li>
+                {(role === "admin" || role === "delivery") && (
+                  <li>
+                    <Link href="/delivery" className="hover:text-indigo-500 py-2"><Bike size={16}/> Delivery Panel</Link>
+                  </li>
+                )}
                 <li>
                   <Link href="/profile" className="hover:text-indigo-500 py-2"><User size={16}/> My Profile</Link>
                 </li>
@@ -120,6 +127,9 @@ const NavbarPage = () => {
             <>
               <div className="divider my-0"></div>
               <Link href="/Dashboard" className="text-lg font-medium p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center gap-2"><LayoutDashboard size={18}/> Dashboard</Link>
+              {(role === "admin" || role === "delivery") && (
+                <Link href="/delivery" className="text-lg font-medium p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg flex items-center gap-2"><Bike size={18}/> Delivery Panel</Link>
+              )}
               <button className="flex items-center justify-start w-full text-lg font-medium p-2 text-red-500 hover:bg-red-50 rounded-lg" onClick={handleLogout}><LogOut size={18} className="inline mr-2"/> Logout</button>
             </>
           )}

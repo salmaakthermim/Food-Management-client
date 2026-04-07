@@ -129,7 +129,13 @@ const AddFoodPage = () => {
             <option>Drinks</option>
             <option>Dessert</option>
             <option>Orange</option>
-            <option>Snacks</option>
+            <option>Pizza</option> 
+            <option>Burger</option> 
+            <option>Sushi</option> 
+            <option>Noodles</option> 
+            <option>Fried Chicken</option> 
+            <option>Cake</option> 
+            
           </select>
         </div>
 
