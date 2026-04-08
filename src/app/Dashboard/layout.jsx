@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Home, LayoutDashboard, PlusCircle, Settings, 
@@ -16,11 +16,12 @@ import useRole from "@/hooks/useRole";
 export default function DashboardLayout({ children }) {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
   const { user } = useAuth();
   const [role, isRoleLoading] = useRole();
 
   const handleLogout = () => {
-    signOut(auth);
+    signOut(auth).then(() => router.push("/login"));
   };
 
   // Define navigations dynamically based on roles

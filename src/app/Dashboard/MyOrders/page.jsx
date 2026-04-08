@@ -108,6 +108,55 @@ export default function MyOrdersPage() {
                   </div>
                 </div>
 
+                {/* Delivery Tracking Steps */}
+                <div className="px-6 md:px-8 pt-6 pb-2">
+                  <div className="flex items-center gap-0">
+                    {[
+                      { label: "Order Placed", status: "Pending", icon: ReceiptText },
+                      { label: "Cooking", status: "Cooking", icon: ChefHat },
+                      { label: "Out for Delivery", status: "Out for Delivery", icon: MapPin },
+                      { label: "Delivered", status: "Delivered", icon: CheckCircle },
+                    ].map((step, idx, arr) => {
+                      const statuses = ["Pending", "Cooking", "Out for Delivery", "Delivered"];
+                      const currentIdx = statuses.indexOf(order.status);
+                      const stepIdx = statuses.indexOf(step.status);
+                      const isDone = stepIdx <= currentIdx;
+                      const isActive = stepIdx === currentIdx;
+                      const Icon = step.icon;
+                      return (
+                        <React.Fragment key={step.status}>
+                          <div className="flex flex-col items-center gap-1.5 min-w-[60px]">
+                            <div className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${isDone ? "bg-indigo-500 shadow-lg shadow-indigo-200" : "bg-gray-100"}`}>
+                              <Icon size={16} className={isDone ? "text-white" : "text-gray-400"} />
+                            </div>
+                            <span className={`text-[10px] font-bold text-center leading-tight ${isActive ? "text-indigo-600" : isDone ? "text-gray-600" : "text-gray-400"}`}>
+                              {step.label}
+                            </span>
+                          </div>
+                          {idx < arr.length - 1 && (
+                            <div className={`flex-1 h-0.5 mb-5 transition-all ${stepIdx < currentIdx ? "bg-indigo-500" : "bg-gray-200"}`} />
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+
+                  {/* Delivery person info */}
+                  {order.deliveryEmail && (
+                    <div className="mt-4 flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl px-4 py-3 border border-indigo-100 dark:border-indigo-800">
+                      <div className="p-2 bg-indigo-500 rounded-xl">
+                        <MapPin size={14} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-indigo-600">Delivery Partner: {order.deliveryName || order.deliveryEmail}</p>
+                        {order.deliveryLocation?.address && (
+                          <p className="text-xs text-gray-500 mt-0.5">📍 Currently at: {order.deliveryLocation.address}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Order Details Body */}
                 <div className="flex flex-col lg:flex-row p-6 md:p-8 gap-8">
                   {/* Items List */}

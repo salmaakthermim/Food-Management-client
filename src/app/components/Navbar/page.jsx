@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase.config";
 import useAuth from "@/hooks/useAuth";
@@ -12,9 +13,10 @@ const NavbarPage = () => {
   const { user, dbUser } = useAuth();
   const [role] = useRole();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const handleLogout = () => {
-    signOut(auth);
+    signOut(auth).then(() => router.push("/login"));
   };
 
   const navLinks = [

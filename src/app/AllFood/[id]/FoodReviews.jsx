@@ -5,7 +5,7 @@ import { Star, MessageSquare, Send } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function FoodReviews({ foodId }) {
-  const { user } = useAuth();
+  const { user, dbUser } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -48,7 +48,7 @@ export default function FoodReviews({ foodId }) {
       foodId,
       email: user.email,
       customerName: user.displayName || "Anonymous",
-      customerPhoto: user.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Reviewer",
+      customerPhoto: dbUser?.photo || user?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`,
       rating,
       comment
     };

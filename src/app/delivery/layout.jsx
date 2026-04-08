@@ -10,11 +10,13 @@ import {
 import useAuth from "@/hooks/useAuth";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase.config";
+import { useRouter } from "next/navigation";
 
 export default function DeliveryLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const pathname = usePathname();
   const { user } = useAuth();
+  const router = useRouter();
 
   const navLinks = [
     { name: "Overview",        path: "/delivery",                 icon: Bike },
@@ -117,7 +119,7 @@ export default function DeliveryLayout({ children }) {
             <Home size={18} /> Back to Home
           </Link>
           <button
-            onClick={() => signOut(auth)}
+            onClick={() => signOut(auth).then(() => router.push("/login"))}
             className="w-full flex items-center gap-3 px-4 py-3 text-red-300 hover:bg-red-500/20 hover:text-red-200 rounded-xl font-semibold transition"
           >
             <LogOut size={18} /> Logout
