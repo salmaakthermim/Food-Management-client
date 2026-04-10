@@ -29,13 +29,13 @@ export default function DeliveryDashboard() {
 
   const fetchAssigned = async () => {
     if (!user?.email) return;
-    const res = await fetch(`http://localhost:5000/delivery/orders?email=${user.email}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/delivery/orders?email=${user.email}`);
     const data = await res.json();
     setOrders(data);
   };
 
   const fetchAll = async () => {
-    const res = await fetch("http://localhost:5000/orders/admin/all");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/all`);
     const data = await res.json();
     // show only Cooking orders not yet assigned
     setAllOrders(data.filter(o => o.status === "Cooking" && !o.deliveryEmail));
@@ -52,7 +52,7 @@ export default function DeliveryDashboard() {
   const handleStatusUpdate = async (id, newStatus) => {
     setUpdatingId(id);
     try {
-      const res = await fetch(`http://localhost:5000/orders/${id}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -68,7 +68,7 @@ export default function DeliveryDashboard() {
   const handleAssign = async (orderId) => {
     setUpdatingId(orderId);
     try {
-      const res = await fetch(`http://localhost:5000/orders/${orderId}/assign`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/assign`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ deliveryEmail: user.email, deliveryName: user.displayName }),
@@ -85,7 +85,7 @@ export default function DeliveryDashboard() {
   const handleUpdateLocation = async (orderId) => {
     if (!locationInput.trim()) return;
     try {
-      const res = await fetch(`http://localhost:5000/orders/${orderId}/location`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/location`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ address: locationInput }),

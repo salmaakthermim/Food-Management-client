@@ -15,7 +15,7 @@ export default function TrackLocation() {
   const load = async () => {
     if (!user?.email) return;
     setLoading(true);
-    const data = await fetch(`http://localhost:5000/delivery/orders?email=${user.email}`).then(r => r.json());
+    const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/delivery/orders?email=${user.email}`).then(r => r.json());
     // only active deliveries
     setOrders(data.filter(o => o.status === "Out for Delivery"));
     setLoading(false);
@@ -28,7 +28,7 @@ export default function TrackLocation() {
     if (!address?.trim()) { toast.error("Enter a location first"); return; }
     setSaving(orderId);
     try {
-      const res = await fetch(`http://localhost:5000/orders/${orderId}/location`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/location`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ address }),
@@ -43,7 +43,7 @@ export default function TrackLocation() {
   };
 
   const markDelivered = async (orderId) => {
-    await fetch(`http://localhost:5000/orders/${orderId}/status`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/status`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "Delivered" }),
     });

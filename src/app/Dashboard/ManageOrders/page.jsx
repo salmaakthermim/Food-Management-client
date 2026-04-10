@@ -15,14 +15,14 @@ export default function ManageOrdersPage() {
 
   const fetchOrders = () => {
     setIsFetching(true);
-    fetch("http://localhost:5000/orders/admin/all")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/all`)
       .then(res => res.json())
       .then(data => { setOrders(data); setIsFetching(false); })
       .catch(() => setIsFetching(false));
   };
 
   const fetchDeliveryUsers = () => {
-    fetch("http://localhost:5000/users")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`)
       .then(res => res.json())
       .then(data => setDeliveryUsers(data.filter(u => u.role === "delivery" || u.role === "admin")));
   };
@@ -34,7 +34,7 @@ export default function ManageOrdersPage() {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/orders/${id}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus })
@@ -49,7 +49,7 @@ export default function ManageOrdersPage() {
   const handleAssign = async (orderId, deliveryEmail, deliveryName) => {
     setAssigningId(orderId);
     try {
-      const res = await fetch(`http://localhost:5000/orders/${orderId}/assign`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/assign`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ deliveryEmail, deliveryName }),

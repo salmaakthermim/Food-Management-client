@@ -16,7 +16,7 @@ export default function FoodReviews({ foodId }) {
 
   const fetchReviews = () => {
     setLoading(true);
-    fetch(`http://localhost:5000/reviews/${foodId}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews/${foodId}`)
       .then(res => res.json())
       .then(data => {
         setReviews(data);
@@ -54,7 +54,7 @@ export default function FoodReviews({ foodId }) {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/reviews", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(reviewData)

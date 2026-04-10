@@ -21,7 +21,7 @@ const ManageFoodPage = () => {
 
     const fetchFoods = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/foods");
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/foods`);
             setFoods(res.data);
         } catch (error) {
             console.error("Failed to fetch foods:", error);
@@ -43,7 +43,7 @@ const ManageFoodPage = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`http://localhost:5000/foods/${id}`);
+                    await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/foods/${id}`);
                     setFoods(foods.filter((food) => food._id !== id));
                     Swal.fire({
                         title: "Deleted!",

@@ -9,7 +9,7 @@ const useRole = () => {
 
   useEffect(() => {
     if (!loading && user?.email) {
-      fetch(`http://localhost:5000/users/role/${user.email}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/role/${user.email}`)
         .then((res) => res.json())
         .then((data) => {
           setRole(data.role); // 'admin' or 'customer'

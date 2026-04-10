@@ -28,7 +28,7 @@ export default function CheckoutPage() {
     }
 
     if (user?.email) {
-      fetch(`http://localhost:5000/carts?email=${user.email}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/carts?email=${user.email}`)
         .then(res => res.json())
         .then(data => {
           setCartItems(data);
@@ -66,7 +66,7 @@ export default function CheckoutPage() {
 
     try {
       // Create the order
-      const res = await fetch("http://localhost:5000/orders", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
          method: "POST",
          headers: { "Content-Type": "application/json" },
          body: JSON.stringify(orderData)
@@ -74,7 +74,7 @@ export default function CheckoutPage() {
 
       if (res.ok) {
         // Clear all cart items for this user
-        await Promise.all(cartItems.map(item => fetch(`http://localhost:5000/carts/${item._id}`, { method: "DELETE" })));
+        await Promise.all(cartItems.map(item => fetch(`${process.env.NEXT_PUBLIC_API_URL}/carts/${item._id}`, { method: "DELETE" })));
         setOrderSuccess(true);
         setTimeout(() => router.push("/Dashboard/MyOrders"), 3000);
       }

@@ -35,7 +35,7 @@ export default function FoodDetailsClient({ food }) {
         timestamp: new Date()
       };
 
-      const res = await fetch("http://localhost:5000/carts", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cartItem)
@@ -69,7 +69,7 @@ export default function FoodDetailsClient({ food }) {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/wishlists", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/wishlists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(wishlistItem)

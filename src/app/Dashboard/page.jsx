@@ -15,7 +15,7 @@ export default function DashboardOverview() {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const res = await fetch("http://localhost:5000/foods");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/foods`);
         const data = await res.json();
         setFoods(data);
         setLoading(false);

@@ -11,7 +11,7 @@ export default function MyOrdersPage() {
 
   useEffect(() => {
     if (user?.email) {
-      fetch(`http://localhost:5000/orders?email=${user.email}`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders?email=${user.email}`)
         .then(res => res.json())
         .then(data => {
           setOrders(data);

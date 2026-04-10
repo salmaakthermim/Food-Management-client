@@ -14,8 +14,8 @@ export default function DeliveryOverview() {
   useEffect(() => {
     if (!user?.email) return;
     Promise.all([
-      fetch(`http://localhost:5000/delivery/orders?email=${user.email}`).then(r => r.json()),
-      fetch("http://localhost:5000/orders/admin/all").then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/delivery/orders?email=${user.email}`).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/all`).then(r => r.json()),
     ]).then(([mine, all]) => {
       setOrders(mine);
       setAvailable(all.filter(o => o.status === "Cooking" && !o.deliveryEmail));

@@ -2,7 +2,7 @@ import FoodCardPage from "../components/FoodCardPage";
 
 async function getFoods() {
   try {
-    const res = await fetch("http://localhost:5000/foods", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/foods`, {
       cache: "no-store",
     });
     return res.json();

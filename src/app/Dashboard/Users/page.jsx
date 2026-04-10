@@ -11,7 +11,7 @@ export default function UsersPage() {
 
   const fetchUsers = () => {
     setIsFetching(true);
-    fetch("http://localhost:5000/users")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`)
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -26,7 +26,7 @@ export default function UsersPage() {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
-      const res = await fetch(`http://localhost:5000/users/role/${userId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/role/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role: newRole }),
@@ -43,7 +43,7 @@ export default function UsersPage() {
   const handleDelete = async (userId, name) => {
     if (!confirm(`Delete user "${name}"?`)) return;
     try {
-      const res = await fetch(`http://localhost:5000/users/${userId}`, { method: "DELETE" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`, { method: "DELETE" });
       if (res.ok) {
         toast.success("User deleted");
         setUsers((prev) => prev.filter((u) => u._id !== userId));

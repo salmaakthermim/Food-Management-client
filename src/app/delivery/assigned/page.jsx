@@ -27,8 +27,8 @@ export default function AssignedOrders() {
     if (!user?.email) return;
     setLoading(true);
     const [mine, all] = await Promise.all([
-      fetch(`http://localhost:5000/delivery/orders?email=${user.email}`).then(r => r.json()),
-      fetch("http://localhost:5000/orders/admin/all").then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/delivery/orders?email=${user.email}`).then(r => r.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/all`).then(r => r.json()),
     ]);
     setOrders(mine);
     setAvailable(all.filter(o => o.status === "Cooking" && !o.deliveryEmail));
@@ -39,7 +39,7 @@ export default function AssignedOrders() {
 
   const updateStatus = async (id, status) => {
     setUpdatingId(id);
-    await fetch(`http://localhost:5000/orders/${id}/status`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
@@ -50,7 +50,7 @@ export default function AssignedOrders() {
 
   const acceptOrder = async (id) => {
     setUpdatingId(id);
-    await fetch(`http://localhost:5000/orders/${id}/assign`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/assign`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ deliveryEmail: user.email, deliveryName: user.displayName }),
     });
@@ -62,7 +62,7 @@ export default function AssignedOrders() {
 
   const saveLocation = async (id) => {
     if (!locationInput.trim()) return;
-    await fetch(`http://localhost:5000/orders/${id}/location`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/location`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address: locationInput }),
     });

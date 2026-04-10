@@ -23,7 +23,7 @@ const CartPage = () => {
 
   const fetchCart = () => {
     setIsFetching(true);
-    fetch(`http://localhost:5000/carts?email=${user.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/carts?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => {
         setCartItems(data);
@@ -43,7 +43,7 @@ const CartPage = () => {
     setCartItems(prev => prev.map(item => item._id === id ? {...item, quantity: newQty} : item));
 
     try {
-      await fetch(`http://localhost:5000/carts/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carts/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: newQty })
@@ -60,7 +60,7 @@ const CartPage = () => {
     setCartItems(prev => prev.filter(item => item._id !== id));
     
     try {
-      await fetch(`http://localhost:5000/carts/${id}`, { method: "DELETE" });
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/carts/${id}`, { method: "DELETE" });
     } catch (error) {
       console.error("Failed to delete", error);
       fetchCart();

@@ -1,167 +1,242 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, ArrowRight, Star } from "lucide-react";
 
 const slides = [
   {
     id: 1,
-    tag: "New Introduction",
-    title: "Discover ",
+    tag: "🌿 Fresh & Organic",
+    title: "Discover",
     highlight: "Fresh Foods",
-    description: "Organic food is produced by methods that comply with the highest standards of organic farming. Enjoy the authentic taste of nature.",
-    image: "https://i.ibb.co.com/kV6fcqGf/banner1.png",
-    bgFrom: "from-[#d4f8e8]",
-    bgVia: "via-white",
-    bgTo: "to-[#e8fff2]",
-    buttonColors: "from-[#ff6f61] to-[#ff4e3e]",
-    blob1: "bg-green-200",
-    blob2: "bg-yellow-100",
+    description: "Farm-to-table goodness delivered straight to your door. Experience the authentic taste of nature in every bite.",
+    bg: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80",
+    accent: "from-green-400 to-emerald-500",
+    badge: "bg-green-500",
+    cta: "/AllFood",
   },
   {
     id: 2,
-    tag: "Healthy Living",
-    title: "Nourish ",
+    tag: "🥗 Healthy Living",
+    title: "Nourish",
     highlight: "Your Body",
-    description: "Explore our rich variety of organic salads and healthy meals crafted specifically to keep you full of energy all day.",
-    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop",
-    bgFrom: "from-[#e6f2ff]",
-    bgVia: "via-white",
-    bgTo: "to-[#f0f9ff]",
-    buttonColors: "from-[#3b82f6] to-[#2563eb]",
-    blob1: "bg-blue-200",
-    blob2: "bg-cyan-100",
+    description: "Explore our rich variety of healthy meals crafted to keep you energized and feeling your absolute best all day.",
+    bg: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1600&q=80",
+    accent: "from-blue-400 to-indigo-500",
+    badge: "bg-blue-500",
+    cta: "/menu",
   },
   {
     id: 3,
-    tag: "Spicy & Tasty",
-    title: "Savor ",
+    tag: "🔥 Chef's Special",
+    title: "Savor",
     highlight: "Every Bite",
     description: "Dive into our deliciously crafted culinary masterpieces that bring joy and warmth to your family table.",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=600&auto=format&fit=crop",
-    bgFrom: "from-[#fff0e6]",
-    bgVia: "via-white",
-    bgTo: "to-[#fff5f0]",
-    buttonColors: "from-[#f97316] to-[#ea580c]",
-    blob1: "bg-orange-200",
-    blob2: "bg-red-100",
-  }
+    bg: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1600&q=80",
+    accent: "from-orange-400 to-red-500",
+    badge: "bg-orange-500",
+    cta: "/menu",
+  },
+  {
+    id: 4,
+    tag: "🍕 Fast Delivery",
+    title: "Order",
+    highlight: "In Minutes",
+    description: "Hot, fresh food at your doorstep in under 30 minutes. Because great food shouldn't make you wait.",
+    bg: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600&q=80",
+    accent: "from-purple-400 to-pink-500",
+    badge: "bg-purple-500",
+    cta: "/AllFood",
+  },
 ];
 
 const BannerPage = () => {
   const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [paused, setPaused] = useState(false);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(timer);
+  const goTo = useCallback((idx, dir = 1) => {
+    setDirection(dir);
+    setCurrent(idx);
   }, []);
 
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrent((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  const next = useCallback(() => goTo((current + 1) % slides.length, 1), [current, goTo]);
+  const prev = useCallback(() => goTo(current === 0 ? slides.length - 1 : current - 1, -1), [current, goTo]);
+
+  useEffect(() => {
+    const t = setInterval(next, 5500);
+    return () => clearInterval(t);
+  }, [next]);
 
   const slide = slides[current];
 
+  const variants = {
+    enter: (dir) => ({ opacity: 0, scale: 1.08, x: dir > 0 ? 60 : -60 }),
+    center: { opacity: 1, scale: 1, x: 0 },
+    exit: (dir) => ({ opacity: 0, scale: 0.95, x: dir > 0 ? -60 : 60 }),
+  };
+
   return (
-    <div className={`relative w-full bg-gradient-to-br ${slide.bgFrom} ${slide.bgVia} ${slide.bgTo} py-20 overflow-hidden shadow-sm transition-colors duration-1000 min-h-[600px] flex items-center`}>
-      {/* Background Decorative Shapes */}
-      <div className={`absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 ${slide.blob1} rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob transition-colors duration-1000`}></div>
-      <div className={`absolute top-0 left-0 -ml-20 mt-32 w-72 h-72 ${slide.blob2} rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000 transition-colors duration-1000`}></div>
-      
-      <div className="relative max-w-7xl mx-auto px-6 z-10 w-full flex flex-col justify-center">
-        <AnimatePresence mode="wait">
+    <div
+      className="relative w-full min-h-[92vh] flex items-center overflow-hidden"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* Background Slides */}
+      <AnimatePresence custom={direction} initial={false}>
+        <motion.div
+          key={current}
+          custom={direction}
+          variants={{
+            enter: (dir) => ({ opacity: 0, scale: 1.1 }),
+            center: { opacity: 1, scale: 1 },
+            exit: (dir) => ({ opacity: 0, scale: 1.05 }),
+          }}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url('${slide.bg}')` }}
+        />
+      </AnimatePresence>
+
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+      {/* Content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-20">
+        <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={current}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="grid grid-cols-1 md:grid-cols-2 items-center gap-12"
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="max-w-2xl"
           >
-            {/* Left Text Section */}
-            <div className="flex flex-col items-start justify-center space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm text-gray-800 font-semibold text-sm uppercase tracking-wider cursor-default shadow-sm border border-white">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                </span>
-                {slide.tag}
+            {/* Tag */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur border border-white/30 rounded-full text-white text-sm font-bold mb-6"
+            >
+              <span className={`w-2 h-2 rounded-full ${slide.badge} animate-pulse`} />
+              {slide.tag}
+            </motion.div>
+
+            {/* Title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none mb-4 tracking-tight"
+            >
+              {slide.title}
+              <br />
+              <span className={`bg-gradient-to-r ${slide.accent} bg-clip-text text-transparent`}>
+                {slide.highlight}
+              </span>
+            </motion.h1>
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+              className="text-white/80 text-lg md:text-xl leading-relaxed mb-10 max-w-lg"
+            >
+              {slide.description}
+            </motion.p>
+
+            {/* Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+              className="flex flex-wrap gap-4"
+            >
+              <Link href={slide.cta}>
+                <motion.button
+                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
+                  className={`flex items-center gap-2 px-8 py-4 bg-gradient-to-r ${slide.accent} text-white font-black rounded-2xl shadow-2xl hover:shadow-lg transition-all text-lg`}
+                >
+                  Order Now <ArrowRight size={20} />
+                </motion.button>
+              </Link>
+              <Link href="/AboutUs">
+                <motion.button
+                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 px-8 py-4 bg-white/15 backdrop-blur border border-white/40 text-white font-bold rounded-2xl hover:bg-white/25 transition-all text-lg"
+                >
+                  Learn More
+                </motion.button>
+              </Link>
+            </motion.div>
+
+            {/* Rating */}
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+              className="flex items-center gap-3 mt-10"
+            >
+              <div className="flex -space-x-2">
+                {["Felix", "Mia", "John", "Sara"].map(seed => (
+                  <img key={seed} src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`}
+                    className="w-9 h-9 rounded-full border-2 border-white bg-white" />
+                ))}
               </div>
-
-              <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 leading-tight drop-shadow-sm">
-                {slide.title} <br className="hidden md:block" />
-                <span className={`text-transparent bg-clip-text bg-gradient-to-r ${slide.buttonColors}`}>
-                  {slide.highlight}
-                </span>
-              </h1>
-
-              <p className="text-gray-600 text-lg md:text-xl font-medium leading-relaxed max-w-lg min-h-[80px]">
-                {slide.description}
-              </p>
-
-              <div className="flex flex-wrap gap-4 pt-4">
-                <Link href="/AllFood">
-                  <button className={`px-8 py-4 bg-gradient-to-r ${slide.buttonColors} text-white rounded-full text-lg font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transform transition-all duration-300`}>
-                    Shop Now
-                  </button>
-                </Link>
-                <Link href="/Features">
-                  <button className="px-8 py-4 bg-white/80 backdrop-blur-md text-gray-800 rounded-full text-lg font-bold shadow-md hover:shadow-lg border border-white hover:bg-white transform transition-all duration-300">
-                    Learn More
-                  </button>
-                </Link>
+              <div>
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => <Star key={i} size={14} className="text-amber-400 fill-amber-400" />)}
+                  <span className="text-white font-black ml-1">4.9</span>
+                </div>
+                <p className="text-white/60 text-xs">50,000+ happy customers</p>
               </div>
-            </div>
-
-            {/* Right Image Section */}
-            <div className="relative flex justify-center group mt-10 md:mt-0">
-              <div className={`absolute inset-0 ${slide.blob1} blur-[80px] rounded-full opacity-30 transition-colors duration-1000`}></div>
-              <motion.img
-                initial={{ scale: 0.8, opacity: 0, rotate: -5 }}
-                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                transition={{ duration: 0.8, delay: 0.1, type: "spring", stiffness: 100 }}
-                src={slide.image}
-                alt={slide.highlight}
-                className="w-full max-w-sm md:max-w-lg lg:max-w-xl relative z-10 drop-shadow-2xl hover:scale-105 transition-transform duration-500 ease-out"
-                style={slide.id !== 1 ? { borderRadius: "20px", objectFit: "cover", aspectRatio: "4/3" } : {}}
-              />
-            </div>
+            </motion.div>
           </motion.div>
         </AnimatePresence>
+      </div>
 
-        {/* Slider Controls */}
-        <div className="flex justify-center md:justify-start items-center gap-4 mt-8 md:mt-12 absolute md:relative bottom-4 md:bottom-auto left-0 right-0 z-20 md:pl-2">
-          <button 
-            onClick={prevSlide}
-            className="p-3 text-lg font-bold text-gray-700 rounded-full bg-white/60 hover:bg-white backdrop-blur-sm shadow-sm transition border border-gray-100"
-            aria-label="Previous slide"
-          >
-             &#8592;
-          </button>
-          
-          <div className="flex gap-2">
-            {slides.map((s, i) => (
-               <button
-                 key={s.id}
-                 onClick={() => setCurrent(i)}
-                 className={`h-2 rounded-full transition-all duration-300 ${
-                   i === current ? `w-8 bg-gradient-to-r ${slide.buttonColors}` : "w-2 bg-gray-300"
-                 }`}
-                 aria-label={`Go to slide ${i + 1}`}
-               />
-            ))}
-          </div>
+      {/* Slide Number */}
+      <div className="absolute top-8 right-8 z-20 hidden md:flex items-center gap-2 text-white/60 text-sm font-bold">
+        <span className="text-white text-2xl font-black">{String(current + 1).padStart(2, "0")}</span>
+        <span>/</span>
+        <span>{String(slides.length).padStart(2, "0")}</span>
+      </div>
 
-          <button 
-            onClick={nextSlide}
-            className="p-3 text-lg font-bold text-gray-700 rounded-full bg-white/60 hover:bg-white backdrop-blur-sm shadow-sm transition border border-gray-100"
-            aria-label="Next slide"
-          >
-            &#8594;
-          </button>
-        </div>
+      {/* Arrow Controls */}
+      <button
+        onClick={prev}
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-white/15 backdrop-blur border border-white/30 text-white rounded-full hover:bg-white/30 transition-all"
+      >
+        <ChevronLeft size={22} />
+      </button>
+      <button
+        onClick={next}
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-white/15 backdrop-blur border border-white/30 text-white rounded-full hover:bg-white/30 transition-all"
+      >
+        <ChevronRight size={22} />
+      </button>
+
+      {/* Dot Indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {slides.map((s, i) => (
+          <button
+            key={s.id}
+            onClick={() => goTo(i, i > current ? 1 : -1)}
+            className={`transition-all duration-400 rounded-full ${
+              i === current ? "w-8 h-2.5 bg-white" : "w-2.5 h-2.5 bg-white/40 hover:bg-white/70"
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 w-full h-0.5 bg-white/20 z-20">
+        <motion.div
+          key={current}
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 5.5, ease: "linear" }}
+          className={`h-full bg-gradient-to-r ${slide.accent}`}
+        />
       </div>
     </div>
   );

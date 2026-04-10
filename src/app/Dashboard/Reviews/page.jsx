@@ -13,7 +13,7 @@ export default function MyReviewsPage() {
   useEffect(() => {
     if (!user?.email) return;
     setLoading(true);
-    fetch(`http://localhost:5000/user-reviews?email=${user.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/user-reviews?email=${user.email}`)
       .then(res => res.json())
       .then(data => {
         setReviews(data);

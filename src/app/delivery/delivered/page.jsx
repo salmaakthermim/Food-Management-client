@@ -11,7 +11,7 @@ export default function DeliveredOrders() {
 
   useEffect(() => {
     if (!user?.email) return;
-    fetch(`http://localhost:5000/delivery/orders?email=${user.email}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/delivery/orders?email=${user.email}`)
       .then(r => r.json())
       .then(data => {
         setOrders(data.filter(o => o.status === "Delivered"));
