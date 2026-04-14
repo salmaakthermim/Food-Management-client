@@ -1,11 +1,14 @@
 import React from "react";
 import MenuClient from "./MenuClient";
 
+import { unstable_noStore as noStore } from "next/cache";
+
 async function getFoods() {
+  noStore();
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/foods`, {
-      cache: "no-store",
-    });
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const res = await fetch(`${apiUrl}/foods`);
+    if (!res.ok) return [];
     return res.json();
   } catch (error) {
     console.error("Failed to fetch menu foods:", error);

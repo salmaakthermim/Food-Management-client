@@ -98,6 +98,7 @@ const AllFoodPage = () => {
             >
               {filteredFoods.map((food, index) => (
                   <motion.div
+                    key={food._id}
                     layout
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}

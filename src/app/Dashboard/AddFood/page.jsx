@@ -2,24 +2,25 @@
 
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 const AddFoodPage = () => {
   const { user } = useAuth();
   const router = useRouter();
 
-  if (!user) {
-    router.push("/login");
-  }
+  useEffect(() => {
+    if (user === null) {
+      router.push("/login");
+    }
+  }, [user, router]);
 
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     category: "",
-    location: "",
+    foodLocation: "",
     date: "",
     priority: "",
     email: user?.email || "",
@@ -39,7 +40,10 @@ const AddFoodPage = () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/foods`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          location: formData.foodLocation,
+        }),
       });
 
       const data = await response.json();
@@ -55,7 +59,7 @@ const AddFoodPage = () => {
           description: "",
           price: "",
           category: "",
-          location: "",
+          foodLocation: "",
           date: "",
           priority: "",
           email: "",
@@ -143,8 +147,8 @@ const AddFoodPage = () => {
           <label className="text-gray-700 font-medium">Location</label>
           <input
             type="text"
-            name="location"
-            value={formData.location}
+            name="foodLocation"
+            value={formData.foodLocation}
             onChange={handleChange}
             placeholder="Enter location"
             className="w-full text-black mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 focus:border-blue-400"

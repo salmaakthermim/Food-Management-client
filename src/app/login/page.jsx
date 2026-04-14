@@ -6,9 +6,11 @@ import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 
 import { auth } from "@/firebase.config";
 import { useRouter } from "next/navigation";
 
+import { useLanguage } from "@/provider/LanguageProvider";
+
 const LoginPage = () => {
     const router = useRouter();
-
+    const { t } = useLanguage();
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     // Email + Password Login

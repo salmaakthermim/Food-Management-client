@@ -41,13 +41,21 @@ const NavbarPage = () => {
 
   useEffect(() => { setIsOpen(false); }, [pathname]);
 
-  useEffect(() => {
+  const fetchCartCount = () => {
     if (!user?.email) return;
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/carts?email=${user.email}`)
       .then(r => r.json())
       .then(data => setCartCount(Array.isArray(data) ? data.length : 0))
       .catch(() => {});
+  };
+
+  useEffect(() => {
+    fetchCartCount();
+    const interval = setInterval(fetchCartCount, 10000);
+    return () => clearInterval(interval);
   }, [user]);
+
+  useEffect(() => { fetchCartCount(); }, [pathname]);
 
   const handleLogout = () => {
     signOut(auth).then(() => router.push("/login"));

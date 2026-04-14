@@ -7,6 +7,7 @@ import "aos/dist/aos.css";
 import FooterPage from "./components/Footer/page";
 import NavbarPage from "./components/Navbar/page";
 import AuthProvider from "@/provider/AuthProvider";
+import LanguageProvider from "@/provider/LanguageProvider";
 // import { useEffect } from "react";
 // import Aos from "aos";
 
@@ -21,8 +22,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Learning Next.JS",
-  description: "Trying to Learn NextJS as best as we can",
+  title: "Foodie — Delicious Food Delivered Fast",
+  description: "Order fresh, organic meals and drinks delivered to your door in 30 minutes.",
 };
 
 export default function RootLayout({ children }) {
@@ -41,11 +42,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <NavbarPage />
-          {children}
-          <FooterPage />
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <NavbarPage />
+            {children}
+            <FooterPage />
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
